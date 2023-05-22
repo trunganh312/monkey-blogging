@@ -1,0 +1,55 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@import "content";
+@import "reset";
+@layer base {
+}
+body {
+  font-family: "Poppins", sans-serif;
+}
+
+.pagination {
+  display: flex;
+  gap: 30px;
+  align-items: center;
+  justify-content: center;
+  margin-top: 20px;
+  .disabled {
+    color: #adacac;
+  }
+  .previous,
+  .next {
+    font-size: 25px;
+  }
+  .selected {
+    padding: 5px 15px;
+    background-color: #a4d96c;
+    color: white;
+  }
+}
+
+.form-layout {
+  @apply grid grid-cols-1 lg:grid-cols-2 lg:gap-x-10 mb-5 lg:mb-10;
+}
+
+.container {
+  width: 100%;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 40px;
+}
+
+.icon {
+  width: 20px;
+  position: absolute;
+  right: 10px;
+  cursor: pointer;
+}
+
+.hide-text-dot {
+  -webkit-line-clamp: 1; /* số dòng hiển thị */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
