@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 import PostCategory from "./PostCategory";
 import PostImage from "./PostImage";
@@ -23,19 +24,28 @@ const PostItemStyle = styled.div`
   }
 `;
 
-const PostItem = () => {
+const PostItem = ({ post = {} }) => {
+  if (!post) return;
+  const date = post?.createdAt?.seconds
+    ? new Date(post?.createdAt?.seconds * 1000)
+    : new Date();
+  const formatDate = new Date(date).toLocaleDateString("vi-VI");
   return (
-    <PostItemStyle>
-      <PostImage
-        className="img"
-        url="https://images.unsplash.com/photo-1683659635689-3df761eddb70?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHw0fHx8ZW58MHx8fHw%3D&auto=format&fit=crop&w=500&q=60"
-      ></PostImage>
-      <PostCategory>Kiến thức</PostCategory>
-      <PostTitle className="title">
-        Hướng dẫn setup phòng cực chill dành cho người mới toàn tập
-      </PostTitle>
-      <PostMeta className="meta"></PostMeta>
-    </PostItemStyle>
+    <Link to={`/${post.slug}`}>
+      <PostItemStyle>
+        <PostImage className="img" url={post.image} to={post.slug}></PostImage>
+        <PostCategory to={post.category?.slug}>
+          {post.category?.name}
+        </PostCategory>
+        <PostTitle className="title">{post.title}</PostTitle>
+        <PostMeta
+          className="meta"
+          date={formatDate}
+          name={post?.user?.fullname}
+          to={post?.user?.username}
+        ></PostMeta>
+      </PostItemStyle>
+    </Link>
   );
 };
 

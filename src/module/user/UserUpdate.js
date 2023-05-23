@@ -5,6 +5,7 @@ import ImageUpload from "components/image/ImageUpload";
 import { Input } from "components/input";
 import InputPasswordToggle from "components/input/InputPasswordToggle";
 import { Label } from "components/label";
+import Textarea from "components/textarea/Textarea";
 import { useAuth } from "contexts/auth-context";
 import { db } from "firebase-app/firebase-config";
 import {
@@ -12,11 +13,13 @@ import {
   doc,
   getDoc,
   getDocs,
+  query,
   updateDoc,
+  where,
 } from "firebase/firestore";
 import useFirebaseImage from "hooks/useFirebaseImage";
 import DashboardHeading from "module/dashboard/DashboardHeading";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -53,10 +56,22 @@ const UserUpdate = () => {
     }
     fetchData();
   }, [userId, reset]);
-
+  const [roleUser, setRoleUser] = useState(0);
+  useEffect(() => {
+    (async () => {
+      try {
+        const colRef = doc(db, "users", userInfo.uid);
+        const docData = await getDoc(colRef);
+        setRoleUser(docData.data().role);
+      } catch (error) {
+        console.log(error.message);
+      }
+    })();
+  }, [userInfo.uid]);
   if (!userId) return null;
+
   const handleUpdateUser = async (values) => {
-    if (userInfo?.role !== userRole.ADMIN) {
+    if (roleUser !== userRole.ADMIN) {
       Swal.fire("Failed", "You have no right to do this action", "warning");
       return;
     }
@@ -201,12 +216,12 @@ const UserUpdate = () => {
             </div>
           </Field>
         </div>
-        {/* <div className="form-layout">
+        <div className="form-layout">
           <Field>
             <Label>Description</Label>
             <Textarea name="description" control={control}></Textarea>
           </Field>
-        </div> */}
+        </div>
         <Button
           isLoading={isSubmitting}
           disabled={isSubmitting}

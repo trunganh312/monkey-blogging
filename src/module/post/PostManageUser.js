@@ -18,7 +18,6 @@ import {
 } from "firebase/firestore";
 import { debounce } from "lodash";
 import DashboardHeading from "module/dashboard/DashboardHeading";
-import PostManageUser from "module/post/PostManageUser";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
@@ -26,27 +25,29 @@ import { postStatus, userRole } from "utils/constants";
 
 const POST_PER_PAGE = 10;
 
-const PostManage = () => {
+const PostManageUser = () => {
   const [postList, setPostList] = useState([]);
   const [filter, setFilter] = useState("");
   const [lastDoc, setLastDoc] = useState();
   const [total, setTotal] = useState(0);
   const navigate = useNavigate();
   const { userInfo } = useAuth();
-
   useEffect(() => {
     async function fetchData() {
+      if (!userInfo?.uid) return;
       const colRef = collection(db, "posts");
+      const q = query(
+        colRef,
+        where("user.id", "==", userInfo?.uid),
+        limit(POST_PER_PAGE)
+      );
       const newRef = filter
         ? query(
             colRef,
             where("title", ">=", filter.toUpperCase()),
             where("title", "<=", filter.toLowerCase() + "uf8")
-
-            // where("title", ">=", filter),
-            // where("title", "<=", filter + "utf8")
           )
-        : query(colRef, limit(POST_PER_PAGE));
+        : q;
       const documentSnapshots = await getDocs(newRef);
       const lastVisible =
         documentSnapshots.docs[documentSnapshots.docs.length - 1];
@@ -67,21 +68,7 @@ const PostManage = () => {
       setLastDoc(lastVisible);
     }
     fetchData();
-  }, [filter]);
-
-  const [roleUser, setRoleUser] = useState(0);
-  useEffect(() => {
-    (async () => {
-      if (!userInfo?.uid) return;
-      try {
-        const colRef = doc(db, "users", userInfo?.uid);
-        const docData = await getDoc(colRef);
-        setRoleUser(docData.data().role);
-      } catch (error) {
-        console.log(error.message);
-      }
-    })();
-  }, [userInfo?.uid]);
+  }, [filter, userInfo?.uid]);
 
   async function handleDeletePost(postId) {
     const docRef = doc(db, "posts", postId);
@@ -94,7 +81,7 @@ const PostManage = () => {
       cancelButtonColor: "#d33",
       confirmButtonText: "Yes, delete it!",
     }).then(async (result) => {
-      if (result.isConfirmed && roleUser === userRole.ADMIN) {
+      if (result.isConfirmed) {
         await deleteDoc(docRef);
         Swal.fire("Deleted!", "Your post has been deleted.", "success");
       } else {
@@ -121,6 +108,7 @@ const PostManage = () => {
   const handleLoadMorePost = async () => {
     const nextRef = query(
       collection(db, "posts"),
+      where("user.id", "==", userInfo?.uid),
       startAfter(lastDoc || 0),
       limit(POST_PER_PAGE)
     );
@@ -140,8 +128,8 @@ const PostManage = () => {
       documentSnapshots.docs[documentSnapshots.docs.length - 1];
     setLastDoc(lastVisible);
   };
+  if (userInfo === null) return null;
 
-  if (roleUser !== userRole.ADMIN) return <PostManageUser></PostManageUser>;
   return (
     <div>
       <DashboardHeading
@@ -243,4 +231,4 @@ const PostManage = () => {
   );
 };
 
-export default PostManage;
+export default PostManageUser;

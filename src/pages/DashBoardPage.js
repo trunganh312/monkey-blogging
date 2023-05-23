@@ -1,3 +1,4 @@
+import { useAuth } from "contexts/auth-context";
 import React from "react";
 import styled from "styled-components";
 

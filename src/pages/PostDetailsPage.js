@@ -10,6 +10,7 @@ import {
   query,
   where,
 } from "firebase/firestore";
+import _ from "lodash";
 import PostCategory from "module/post/PostCategory";
 import PostContent from "module/post/PostContent";
 import PostImage from "module/post/PostImage";
@@ -19,6 +20,7 @@ import PostTitle from "module/post/PostTitle";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
+import NotFoundPage from "./NotFoundPage";
 
 const PostDetailsPageStyle = styled.div`
   .meta {
@@ -30,6 +32,8 @@ const PostDetailsPage = () => {
   // const params = useParams()
   const { slug } = useParams();
   const [postInfo, setPostInfo] = useState({});
+  const [postRelate, setPostRelate] = useState([]);
+  const [categoryRelate, setCategoryRelate] = useState("");
   useEffect(() => {
     (async () => {
       if (!slug) return;
@@ -37,10 +41,36 @@ const PostDetailsPage = () => {
       onSnapshot(colRef, (snapshot) => {
         snapshot.forEach((doc) => {
           setPostInfo(doc.data());
+          setCategoryRelate(doc.data().category.id);
         });
       });
     })();
   }, [slug]);
+  useEffect(() => {
+    document.body.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, [slug]);
+  useEffect(() => {
+    (async () => {
+      if (!categoryRelate) return;
+      const colRef = query(
+        collection(db, "posts"),
+        where("category.id", "==", categoryRelate)
+      );
+      let postRelate = [];
+      onSnapshot(colRef, (snapshot) => {
+        snapshot.forEach((doc) => {
+          postRelate.push(doc.data());
+        });
+
+        setPostRelate(postRelate);
+      });
+    })();
+  }, [categoryRelate]);
+  const date = postInfo?.createdAt?.seconds
+    ? new Date(postInfo?.createdAt?.seconds * 1000)
+    : new Date();
+  const formatDate = new Date(date).toLocaleDateString("vi-VI");
+  if (!postInfo.title) return <NotFoundPage></NotFoundPage>;
   return (
     <div className="container">
       <PostDetailsPageStyle>
@@ -48,15 +78,20 @@ const PostDetailsPage = () => {
           <div className="container">
             <div className="flex post-header ">
               <PostImage
-                url="https://scontent.xx.fbcdn.net/v/t1.15752-9/346104770_180263761266625_6839744468459090538_n.png?stp=dst-png_p206x206&_nc_cat=103&ccb=1-7&_nc_sid=aee45a&_nc_ohc=uwmueg9Ul6UAX96FKso&_nc_ad=z-m&_nc_cid=0&_nc_ht=scontent.xx&oh=03_AdQ9Q0Bk87NBt_bs0wcQrzKuTGTsWtctwKRq8VhrNbRKaw&oe=6485DC03"
+                url={postInfo.image}
                 className="w-[650px] h-[460px] rounded-xl mb-10 "
               ></PostImage>
               <div className="flex flex-col items-start justify-center ml-6 post-content ">
-                <PostCategory>kiến thức</PostCategory>
-                <PostTitle>
-                  Hướng dẫn setup phòng cực chill dành cho người mới toàn tập
-                </PostTitle>
-                <PostMeta className="meta"></PostMeta>
+                <PostCategory to={postInfo.category?.slug}>
+                  {postInfo?.category?.name}
+                </PostCategory>
+                <PostTitle>{postInfo.title}</PostTitle>
+                <PostMeta
+                  className="meta"
+                  date={formatDate}
+                  name={postInfo?.user?.fullname}
+                  to={postInfo?.user?.username}
+                ></PostMeta>
               </div>
             </div>
             <div className="post-content px-[150px]">
@@ -66,11 +101,11 @@ const PostDetailsPage = () => {
                   __html: postInfo.content || "",
                 }}
               ></div>
-              <AuthorBox></AuthorBox>
+              <AuthorBox user={postInfo?.user}></AuthorBox>
             </div>
             <div className="post-relate">
               <Heading>Bài viết liên quan</Heading>
-              <PostRelate></PostRelate>
+              <PostRelate postList={_.uniq(postRelate)}></PostRelate>
             </div>
           </div>
         </Layout>

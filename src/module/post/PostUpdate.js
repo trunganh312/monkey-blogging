@@ -9,7 +9,7 @@ import Toggle from "components/toggle/Toggle";
 import { useAuth } from "contexts/auth-context";
 import { db } from "firebase-app/firebase-config";
 import "react-quill/dist/quill.snow.css";
-
+import { imgbbAPI } from "config/apiConfig";
 import {
   collection,
   doc,
@@ -21,6 +21,7 @@ import {
 } from "firebase/firestore";
 import useFirebaseImage from "hooks/useFirebaseImage";
 import DashboardHeading from "module/dashboard/DashboardHeading";
+import ImageUploader from "quill-image-uploader";
 import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import ReactQuill, { Quill } from "react-quill";
@@ -29,9 +30,6 @@ import { toast } from "react-toastify";
 import slugify from "slugify";
 import Swal from "sweetalert2";
 import { postStatus, userRole } from "utils/constants";
-import { imgbbAPI } from "config/apiConfig";
-import axios from "axios";
-import ImageUploader from "quill-image-uploader";
 Quill.register("modules/imageUploader", ImageUploader);
 const PostUpdate = () => {
   const { userInfo } = useAuth();

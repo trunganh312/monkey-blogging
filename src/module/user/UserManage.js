@@ -1,13 +1,28 @@
 import { Button } from "components/button";
 import { useAuth } from "contexts/auth-context";
+import { db } from "firebase-app/firebase-config";
+import { doc, getDoc } from "firebase/firestore";
 import DashboardHeading from "module/dashboard/DashboardHeading";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { userRole } from "utils/constants";
 import UserTable from "./UserTable";
 
 const UserManage = () => {
-  // const { userInfo } = useAuth();
-  // if (userInfo.role !== userRole.ADMIN) return null;
+  const { userInfo } = useAuth();
+  const [roleUser, setRoleUser] = useState(0);
+  useEffect(() => {
+    (async () => {
+      try {
+        const colRef = doc(db, "users", userInfo?.uid);
+        const docData = await getDoc(colRef);
+        setRoleUser(docData.data().role);
+      } catch (error) {
+        console.log(error.message);
+      }
+    })();
+  }, [userInfo?.uid]);
+
+  if (roleUser !== userRole.ADMIN) return null;
   return (
     <div>
       <DashboardHeading

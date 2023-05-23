@@ -18,6 +18,10 @@ const menuLink = [
     url: "/contact",
     title: "Contact",
   },
+  {
+    url: "/dashboard",
+    title: "Dashboard",
+  },
 ];
 
 const HeaderStyle = styled.header`
@@ -141,12 +145,6 @@ const Header = () => {
         </ul>
       </div>
       <div className="header-right">
-        <div className="search">
-          <input type="text" placeholder="Search posts..." />
-          <span className="search-icon">
-            <IconSearch></IconSearch>
-          </span>
-        </div>
         {isLogin ? (
           <>
             <Button type="button" className="btn" onClick={handleSignOut}>

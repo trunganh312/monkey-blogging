@@ -16,7 +16,7 @@ const PostCategoryStyle = styled.span`
 const PostCategory = ({ children, className, to = "/" }) => {
   return (
     <PostCategoryStyle className={className}>
-      <NavLink to={to}>{children}</NavLink>
+      <Link to={`/category/${to}`}>{children}</Link>
     </PostCategoryStyle>
   );
 };

@@ -38,8 +38,8 @@ const SignInPage = () => {
     formState: { isSubmitting, errors },
     control,
   } = useForm({
-    mode: "onChange",
     resolver: yupResolver(schema),
+    mode: "onBlur",
   });
 
   const handleSubmitForm = async (values) => {

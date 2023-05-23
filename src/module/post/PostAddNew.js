@@ -1,17 +1,14 @@
-import useFirebaseImage from "hooks/useFirebaseImage";
-import Toggle from "components/toggle/Toggle";
-import slugify from "slugify";
-import React, { useEffect, useState } from "react";
-import ImageUpload from "components/image/ImageUpload";
-import { useForm } from "react-hook-form";
-import { useAuth } from "contexts/auth-context";
-import { toast } from "react-toastify";
-import { postStatus, userRole } from "utils/constants";
-import { Label } from "components/label";
-import { Input } from "components/input";
-import { Dropdown } from "components/dropdown";
-import { db } from "firebase-app/firebase-config";
 import { Button } from "components/button";
+import Radio from "components/checkbox/Radio";
+import { Dropdown } from "components/dropdown";
+import { Field } from "components/field";
+import ImageUpload from "components/image/ImageUpload";
+import { Input } from "components/input";
+import { Label } from "components/label";
+import Toggle from "components/toggle/Toggle";
+import { imgbbAPI } from "config/apiConfig";
+import { useAuth } from "contexts/auth-context";
+import { db } from "firebase-app/firebase-config";
 import {
   addDoc,
   collection,
@@ -22,10 +19,17 @@ import {
   serverTimestamp,
   where,
 } from "firebase/firestore";
+import useFirebaseImage from "hooks/useFirebaseImage";
 import DashboardHeading from "module/dashboard/DashboardHeading";
-import Swal from "sweetalert2";
-import { Field } from "components/field";
-import Radio from "components/checkbox/Radio";
+import ImageUploader from "quill-image-uploader";
+import { useEffect, useMemo, useState } from "react";
+import { useForm } from "react-hook-form";
+import ReactQuill, { Quill } from "react-quill";
+import "react-quill/dist/quill.snow.css";
+import { toast } from "react-toastify";
+import slugify from "slugify";
+import { postStatus } from "utils/constants";
+Quill.register("modules/imageUploader", ImageUploader);
 
 const PostAddNew = () => {
   const { userInfo } = useAuth();
@@ -39,8 +43,10 @@ const PostAddNew = () => {
       image: "",
       category: {},
       user: {},
+      content: "",
     },
   });
+  const [content, setContent] = useState("");
   const watchStatus = watch("status");
   const watchHot = watch("hot");
   const {
@@ -62,7 +68,6 @@ const PostAddNew = () => {
       );
       const querySnapshot = await getDocs(q);
       querySnapshot.forEach((doc) => {
-        console.log(doc);
         setValue("user", {
           id: doc.id,
           ...doc.data(),
@@ -84,9 +89,11 @@ const PostAddNew = () => {
       cloneValues.slug = slugify(values.slug || values.title, { lower: true });
       cloneValues.status = Number(values.status);
       const colRef = collection(db, "posts");
+
       await addDoc(colRef, {
         ...cloneValues,
         image,
+        content,
         createdAt: serverTimestamp(),
       });
       toast.success("Create new post successfully!");
@@ -99,6 +106,7 @@ const PostAddNew = () => {
         image: "",
         user: {},
       });
+
       handleResetUpload();
       setSelectCategory({});
     } catch (error) {
@@ -138,6 +146,57 @@ const PostAddNew = () => {
     });
     setSelectCategory(item);
   };
+  const modules = useMemo(
+    () => ({
+      // #3 Add "image" to the toolbar
+      toolbar: [
+        ["bold", "italic", "underline", "strike"],
+        ["blockquote"],
+        [{ header: 1 }, { header: 2 }], // custom button values
+        [{ list: "ordered" }, { list: "bullet" }],
+        [{ header: [1, 2, 3, 4, 5, 6, false] }],
+        ["link", "image"],
+      ],
+      // # 4 Add module and upload function
+      imageUploader: {
+        upload: (file) => {
+          return new Promise((resolve, reject) => {
+            const formData = new FormData();
+            formData.append("image", file);
+
+            fetch(imgbbAPI, {
+              method: "POST",
+              body: formData,
+            })
+              .then((response) => response.json())
+              .then((result) => {
+                resolve(result.data.url);
+              })
+              .catch((error) => {
+                reject("Upload failed");
+                console.error("Error:", error);
+              });
+          });
+        },
+      },
+    }),
+    []
+  );
+
+  const formats = [
+    "header",
+    "bold",
+    "italic",
+    "underline",
+    "strike",
+    "blockquote",
+    "list",
+    "bullet",
+    "indent",
+    "link",
+    "image",
+    "imageBlot", // #5 Optinal if using custom formats
+  ];
 
   return (
     <>
@@ -195,6 +254,20 @@ const PostAddNew = () => {
                 {selectCategory?.name}
               </span>
             )}
+          </Field>
+        </div>
+        <div className="mb-10">
+          <Field>
+            <Label>Content</Label>
+            <div className="w-full entry-content">
+              <ReactQuill
+                formats={formats}
+                theme="snow"
+                value={content}
+                onChange={setContent}
+                modules={modules}
+              />
+            </div>
           </Field>
         </div>
         <div className="form-layout">
