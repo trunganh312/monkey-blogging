@@ -1,8 +1,8 @@
 import { Button } from "components/button";
-import { IconSearch } from "components/icon";
 import { useAuth } from "contexts/auth-context";
 import { auth } from "firebase-app/firebase-config";
 import { signOut } from "firebase/auth";
+import { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 const menuLink = [
@@ -28,9 +28,13 @@ const HeaderStyle = styled.header`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  position: relative;
   .header-left {
     display: flex;
     flex: 1;
+    @media only screen and (max-width: 739px) {
+      justify-content: space-between;
+    }
   }
   .logo {
     width: 50px;
@@ -43,6 +47,11 @@ const HeaderStyle = styled.header`
     font-size: 16px;
     font-weight: 500;
     align-items: center;
+    & li {
+      @media only screen and (max-width: 739px) {
+        display: none;
+      }
+    }
   }
 
   .menu-item {
@@ -58,6 +67,13 @@ const HeaderStyle = styled.header`
     display: flex;
     align-items: center;
     justify-content: flex-end;
+    @media only screen and (max-width: 739px) {
+      display: none;
+    }
+
+    @media only screen and (min-width: 740px) and (max-width: 1023px) {
+      display: none;
+    }
   }
 
   .search {
@@ -100,7 +116,6 @@ const HeaderStyle = styled.header`
 
   .title {
     display: block;
-    display: -webkit-box;
     height: 16px * 1.3 * 3;
     font-size: 16px;
     line-height: 1.3;
@@ -115,57 +130,128 @@ const HeaderStyle = styled.header`
       color: ${(props) => props.theme.primary};
     }
   }
+  .sidebar {
+    position: absolute;
+    top: 44px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: #ccc;
+    height: 500px;
+    border-radius: 10px;
+    padding: 10px 20px;
+  }
 `;
 
 const Header = () => {
   const navigate = useNavigate();
   const { userInfo } = useAuth();
+  const [show, setShow] = useState(false);
   const isLogin = !!userInfo?.email;
   const handleSignOut = () => {
     signOut(auth);
   };
   return (
     <HeaderStyle>
-      <div className="header-left">
-        <NavLink to="/">
-          <div className="logo">
-            <img alt="monkey-blogging" srcSet="/monkey.png 2x" />
-          </div>
-        </NavLink>
-        <ul className="menu">
+      <div className={`sidebar duration-200 ${show ? " translate-x-0" : " translate-x-[200%]"}`}>
+        <div className='leading-10'>
           {menuLink.map((menu) => {
             return (
-              <li key={menu.title} className="menu-item">
-                <NavLink to={menu.url} className="menu-link">
+              <li key={menu.title} className='menu-item'>
+                <NavLink to={menu.url} className='menu-link'>
                   {menu.title}
                 </NavLink>
               </li>
             );
           })}
+        </div>
+        <div className='flex flex-col gap-3 mt-3'>
+          {isLogin ? (
+            <>
+              <Button type='button' className='btn ' onClick={handleSignOut}>
+                Sign Out
+              </Button>
+              <p className='title'>
+                Wellcome, <span>{userInfo?.displayName}</span>
+              </p>
+            </>
+          ) : (
+            <>
+              <Button type='button' className='btn ' onClick={() => navigate("/sign-up")}>
+                Sign Up
+              </Button>
+              <Button type='button' className='btn' onClick={() => navigate("/sign-in")}>
+                Login
+              </Button>
+            </>
+          )}
+        </div>
+      </div>
+      <div className='header-left'>
+        <NavLink to='/'>
+          <div className='logo'>
+            <img alt='monkey-blogging' srcSet='/monkey.png 2x' />
+          </div>
+        </NavLink>
+        <ul className='menu '>
+          {menuLink.map((menu) => {
+            return (
+              <li key={menu.title} className='menu-item'>
+                <NavLink to={menu.url} className='menu-link'>
+                  {menu.title}
+                </NavLink>
+              </li>
+            );
+          })}
+          <button
+            data-collapse-toggle='navbar-default'
+            type='button'
+            class='inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400'
+            aria-controls='navbar-default'
+            aria-expanded='false'
+            onClick={() => setShow(!show)}
+          >
+            <span class='sr-only'>Open main menu</span>
+            <svg
+              class='w-5 h-5'
+              aria-hidden='true'
+              xmlns='http://www.w3.org/2000/svg'
+              fill='none'
+              viewBox='0 0 17 14'
+            >
+              <path
+                stroke='currentColor'
+                stroke-linecap='round'
+                stroke-linejoin='round'
+                stroke-width='2'
+                d='M1 1h15M1 7h15M1 13h15'
+              />
+            </svg>
+          </button>
         </ul>
       </div>
-      <div className="header-right">
+      <div className='header-right'>
         {isLogin ? (
           <>
-            <Button type="button" className="btn" onClick={handleSignOut}>
+            <Button type='button ' className='btn max-sm:hidden' onClick={handleSignOut}>
               Sign Out
             </Button>
-            <p className="title">
+            <div className='title !max-sm:hidden'>
               Wellcome, <span>{userInfo?.displayName}</span>
-            </p>
+            </div>
           </>
         ) : (
           <>
             <Button
-              type="button"
-              className="btn"
+              type='button'
+              className='btn max-sm:hidden '
               onClick={() => navigate("/sign-up")}
             >
               Sign Up
             </Button>
             <Button
-              type="button"
-              className="btn"
+              type='button'
+              className='btn max-md:hidden'
               onClick={() => navigate("/sign-in")}
             >
               Login

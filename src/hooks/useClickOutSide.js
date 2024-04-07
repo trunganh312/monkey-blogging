@@ -6,11 +6,7 @@ export default function useClickOutSide(dom) {
 
   useEffect(() => {
     function handleClickOutSide(e) {
-      if (
-        nodeRef.current &&
-        !nodeRef.current.contains(e.target) &&
-        !e.target.matches(dom)
-      ) {
+      if (nodeRef.current && !nodeRef.current.contains(e.target) && !e.target.matches(dom)) {
         setShow(false);
       }
     }

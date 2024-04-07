@@ -27,6 +27,13 @@ const TableStyles = styled.div`
   }
   tbody {
   }
+  @media only screen and (max-width: 739px) {
+    overflow-x: scroll;
+  }
+
+  @media only screen and (min-width: 740px) and (max-width: 1023px) {
+    overflow-x: scroll;
+  }
 `;
 const Table = ({ children }) => {
   return (

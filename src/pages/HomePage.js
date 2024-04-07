@@ -11,6 +11,7 @@ const HomePageStyle = styled.div`
   max-width: 1180px;
   margin: 0 auto;
   padding: 40px;
+  overflow: hidden;
 `;
 
 const HomePage = () => {
@@ -23,7 +24,6 @@ const HomePage = () => {
         <HomeBanner></HomeBanner>
         <HomeFeature></HomeFeature>
         <HomeNewest></HomeNewest>
-        <HomeRelate></HomeRelate>
       </Layout>
     </HomePageStyle>
   );

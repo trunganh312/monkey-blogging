@@ -24,32 +24,37 @@ const BannerStyle = styled.div`
   .description {
     margin: 50px 0;
     letter-spacing: 0.7px;
+    @media only screen and (max-width: 739px) {
+      width: 200px;
+    }
   }
 
   .btn {
     background: white;
     color: ${(props) => props.theme.primary};
+    @media only screen and (max-width: 739px) {
+      display: none;
+    }
   }
 `;
 
 const HomeBanner = () => {
   return (
     <BannerStyle>
-      <div className="container">
-        <div className="banner">
-          <div className="content">
-            <h1 className="title">Monkey Blogging</h1>
-            <p className="description">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-              enim ad minim veniam, quis nostrud exercitation ullamco laboris
-              nisi.
+      <div className='container'>
+        <div className='banner'>
+          <div className='content'>
+            <h1 className='title'>Monkey Blogging</h1>
+            <p className='description'>
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+              incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
+              exercitation ullamco laboris nisi.
             </p>
-            <Button type="button" className="btn">
+            <Button type='button' className='btn'>
               Get Started
             </Button>
           </div>
-          <div className="logo">
+          <div className='logo'>
             <IconBanner></IconBanner>
           </div>
         </div>
