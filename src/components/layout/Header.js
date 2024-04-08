@@ -71,7 +71,7 @@ const HeaderStyle = styled.header`
       display: none;
     }
 
-    @media only screen and (min-width: 740px) and (max-width: 1023px) {
+    @media only screen and (min-width: 900px) and (max-width: 1023px) {
       display: none;
     }
   }

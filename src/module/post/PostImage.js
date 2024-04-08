@@ -14,13 +14,13 @@ const PostImage = ({ className = "", url = "", alt = "", to = "" }) => {
     return (
       <Link to={`/${to}`} style={{ display: "block" }}>
         <PostImageStyles className={`post-image ${className}`}>
-          <img src={url} alt={alt} loading="lazy" />
+          <img src={url} alt={alt} loading='lazy' />
         </PostImageStyles>
       </Link>
     );
   return (
     <PostImageStyles className={`post-image ${className}`}>
-      <img src={url} alt={alt} loading="lazy" />
+      <img src={url} alt={alt} loading='lazy' />
     </PostImageStyles>
   );
 };

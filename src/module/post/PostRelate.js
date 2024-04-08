@@ -10,13 +10,19 @@ const PostRelateStyle = styled.div`
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 20px;
+    @media not all and (min-width: 640px) {
+      grid-template-columns: repeat(1, 1fr);
+    }
+    @media only screen and (min-width: 740px) and (max-width: 1023px) {
+      grid-template-columns: repeat(2, 1fr);
+    }
   }
 `;
 
 const PostRelate = ({ postList = [] }) => {
   return (
     <PostRelateStyle>
-      <div className="grid-layout">
+      <div className='grid-layout'>
         {postList &&
           postList.length > 0 &&
           _.uniq(postList).map((post) => {

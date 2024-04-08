@@ -27,7 +27,7 @@ const HomeNewest = () => {
   const [data, setData] = useState([]);
   useEffect(() => {
     const colRef = collection(db, "posts");
-    const q = query(colRef, limit(3), where("status", "==", 1), where("hot", "==", true));
+    const q = query(colRef, where("status", "==", 1), where("hot", "==", true));
     onSnapshot(q, (snapshot) => {
       const posts = snapshot.docs.map((doc) => {
         return {
@@ -41,7 +41,7 @@ const HomeNewest = () => {
   }, []);
   return (
     <HomeNewestStyle>
-      <Heading>Newest update</Heading>
+      <Heading>Bài viết nổi bật</Heading>
       <div className='grid-layout'>
         {data?.map((item) => {
           return <PostFeatureItem data={item} key={item.id}></PostFeatureItem>;

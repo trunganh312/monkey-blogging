@@ -2,14 +2,7 @@ import AuthorBox from "components/author/AuthorBox";
 import Heading from "components/heading/Heading";
 import Layout from "components/layout/Layout";
 import { db } from "firebase-app/firebase-config";
-import {
-  collection,
-  doc,
-  getDoc,
-  onSnapshot,
-  query,
-  where,
-} from "firebase/firestore";
+import { collection, doc, getDoc, onSnapshot, query, where } from "firebase/firestore";
 import _ from "lodash";
 import PostCategory from "module/post/PostCategory";
 import PostContent from "module/post/PostContent";
@@ -52,10 +45,7 @@ const PostDetailsPage = () => {
   useEffect(() => {
     (async () => {
       if (!categoryRelate) return;
-      const colRef = query(
-        collection(db, "posts"),
-        where("category.id", "==", categoryRelate)
-      );
+      const colRef = query(collection(db, "posts"), where("category.id", "==", categoryRelate));
       let postRelate = [];
       onSnapshot(colRef, (snapshot) => {
         snapshot.forEach((doc) => {
@@ -72,38 +62,36 @@ const PostDetailsPage = () => {
   const formatDate = new Date(date).toLocaleDateString("vi-VI");
   if (!postInfo.title) return <NotFoundPage></NotFoundPage>;
   return (
-    <div className="container">
+    <div className='container'>
       <PostDetailsPageStyle>
         <Layout>
-          <div className="container">
-            <div className="flex post-header ">
+          <div className='container'>
+            <div className='flex post-header max-sm:flex-col '>
               <PostImage
                 url={postInfo.image}
-                className="w-[650px] h-[460px] rounded-xl mb-10 "
+                className='w-[650px] h-[460px] rounded-xl mb-10  '
               ></PostImage>
-              <div className="flex flex-col items-start justify-center ml-6 post-content ">
-                <PostCategory to={postInfo.category?.slug}>
-                  {postInfo?.category?.name}
-                </PostCategory>
+              <div className='flex flex-col items-start justify-center ml-6 post-content '>
+                <PostCategory to={postInfo.category?.slug}>{postInfo?.category?.name}</PostCategory>
                 <PostTitle>{postInfo.title}</PostTitle>
                 <PostMeta
-                  className="meta"
+                  className='meta'
                   date={formatDate}
                   name={postInfo?.user?.fullname}
                   to={postInfo?.user?.username}
                 ></PostMeta>
               </div>
             </div>
-            <div className="post-content px-[150px]">
+            <div className='post-content px-[150px] max-sm:p-0 md:p-0'>
               <div
-                className="entry-content"
+                className='entry-content'
                 dangerouslySetInnerHTML={{
                   __html: postInfo.content || "",
                 }}
               ></div>
               <AuthorBox user={postInfo?.user}></AuthorBox>
             </div>
-            <div className="post-relate">
+            <div className='post-relate'>
               <Heading>Bài viết liên quan</Heading>
               <PostRelate postList={_.uniq(postRelate)}></PostRelate>
             </div>
