@@ -28,7 +28,7 @@ const HomeFeature = () => {
   const [data, setData] = useState([]);
   useEffect(() => {
     const colRef = collection(db, "posts");
-    const q = query(colRef, where("status", "==", 1));
+    const q = query(colRef, where("status", "==", 1), orderBy("createdAt"), limit(12));
     onSnapshot(q, (snapshot) => {
       const posts = snapshot.docs.map((doc) => {
         return {
@@ -43,7 +43,7 @@ const HomeFeature = () => {
 
   return (
     <HomeFeatureStyle>
-      <Heading>Tổng hợp blog </Heading>
+      <Heading>Tổng hợp blog mới nhất </Heading>
       <div className='grid-layout'>
         {data?.map((item) => {
           return <PostFeatureItem data={item} key={item.id}></PostFeatureItem>;

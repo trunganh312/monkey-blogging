@@ -2,7 +2,7 @@ import AuthorBox from "components/author/AuthorBox";
 import Heading from "components/heading/Heading";
 import Layout from "components/layout/Layout";
 import { db } from "firebase-app/firebase-config";
-import { collection, doc, getDoc, onSnapshot, query, where } from "firebase/firestore";
+import { collection, doc, getDoc, limit, onSnapshot, query, where } from "firebase/firestore";
 import _ from "lodash";
 import PostCategory from "module/post/PostCategory";
 import PostContent from "module/post/PostContent";
@@ -45,7 +45,11 @@ const PostDetailsPage = () => {
   useEffect(() => {
     (async () => {
       if (!categoryRelate) return;
-      const colRef = query(collection(db, "posts"), where("category.id", "==", categoryRelate));
+      const colRef = query(
+        collection(db, "posts"),
+        where("category.id", "==", categoryRelate),
+        limit(4),
+      );
       let postRelate = [];
       onSnapshot(colRef, (snapshot) => {
         snapshot.forEach((doc) => {
