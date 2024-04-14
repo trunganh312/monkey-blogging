@@ -125,7 +125,7 @@ const UserTable = () => {
           <div className='flex items-center text-gray-500 gap-x-3'>
             <ActionEdit onClick={() => navigate(`/manage/update-user?id=${user.id}`)}></ActionEdit>
             <ActionDelete
-              disiable={roleUser.role === userRole.MOD}
+              disiable={roleUser === userRole.MOD}
               onClick={() => handleDeleteUser(user.id)}
             ></ActionDelete>
           </div>
