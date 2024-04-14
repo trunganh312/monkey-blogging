@@ -59,11 +59,11 @@ const UserTable = () => {
   const renderLabelStatus = (status) => {
     switch (status) {
       case userStatus.ACTIVE:
-        return <LabelStatus type="success">Active</LabelStatus>;
+        return <LabelStatus type='success'>Active</LabelStatus>;
       case userStatus.PENDING:
-        return <LabelStatus type="warning">Pending</LabelStatus>;
+        return <LabelStatus type='warning'>Pending</LabelStatus>;
       case userStatus.BAN:
-        return <LabelStatus type="danger">Rejected</LabelStatus>;
+        return <LabelStatus type='danger'>Rejected</LabelStatus>;
 
       default:
         break;
@@ -86,35 +86,29 @@ const UserTable = () => {
     return (
       <tr key={user.id}>
         <td title={user.id}>{user.id.slice(0, 5) + "..."}</td>
-        <td className="whitespace-nowrap">
-          <div className="flex items-center gap-x-3">
+        <td className='whitespace-nowrap'>
+          <div className='flex items-center gap-x-3 mgr-50-mb'>
             <img
               src={user?.avatar || "https://picsum.photos/seed/picsum/200/300"}
-              alt=""
-              className="flex-shrink-0 object-cover w-10 h-10 rounded-md"
+              alt=''
+              className='flex-shrink-0 object-cover w-10 h-10 rounded-md'
             />
-            <div className="flex-1">
-              <h3 className="hide-text-dot max-w-[115px] ">{user?.fullname}</h3>
-              <time className="text-sm text-gray-300">
-                {new Date(user?.createAt?.seconds * 1000).toLocaleDateString(
-                  "vi-VI"
-                )}
+            <div className='flex-1'>
+              <h3 className='hide-text-dot max-w-[115px] '>{user?.fullname}</h3>
+              <time className='text-sm text-gray-300'>
+                {new Date(user?.createAt?.seconds * 1000).toLocaleDateString("vi-VI")}
               </time>
             </div>
           </div>
         </td>
-        <td className="text-sm !whitespace-normal">{user?.username}</td>
+        <td className='text-sm !whitespace-normal'>{user?.username}</td>
         <td>{user?.email.slice(0, 5) + "..."}</td>
         <td>{renderLabelStatus(user?.status)}</td>
         <td>{renderRoleLabel(user?.role)}</td>
         <td>
-          <div className="flex items-center text-gray-500 gap-x-3">
-            <ActionEdit
-              onClick={() => navigate(`/manage/update-user?id=${user.id}`)}
-            ></ActionEdit>
-            <ActionDelete
-              onClick={() => handleDeleteUser(user.id)}
-            ></ActionDelete>
+          <div className='flex items-center text-gray-500 gap-x-3'>
+            <ActionEdit onClick={() => navigate(`/manage/update-user?id=${user.id}`)}></ActionEdit>
+            <ActionDelete onClick={() => handleDeleteUser(user.id)}></ActionDelete>
           </div>
         </td>
       </tr>
@@ -134,20 +128,17 @@ const UserTable = () => {
             <th>Actions</th>
           </tr>
         </thead>
-        <tbody>
-          {currentItems.length > 0 &&
-            currentItems.map((user) => renderUserItem(user))}
-        </tbody>
+        <tbody>{currentItems.length > 0 && currentItems.map((user) => renderUserItem(user))}</tbody>
       </Table>
       <ReactPaginate
-        breakLabel="..."
-        nextLabel=" >"
+        breakLabel='...'
+        nextLabel=' >'
         onPageChange={handlePageClick}
         pageRangeDisplayed={5}
         pageCount={pageCount}
-        previousLabel="< "
+        previousLabel='< '
         renderOnZeroPageCount={null}
-        className="pagination"
+        className='pagination'
       />
     </div>
   );

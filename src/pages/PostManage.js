@@ -41,15 +41,14 @@ const PostManage = () => {
         ? query(
             colRef,
             where("title", ">=", filter.toUpperCase()),
-            where("title", "<=", filter.toLowerCase() + "uf8")
+            where("title", "<=", filter.toLowerCase() + "uf8"),
 
             // where("title", ">=", filter),
             // where("title", "<=", filter + "utf8")
           )
         : query(colRef, limit(POST_PER_PAGE));
       const documentSnapshots = await getDocs(newRef);
-      const lastVisible =
-        documentSnapshots.docs[documentSnapshots.docs.length - 1];
+      const lastVisible = documentSnapshots.docs[documentSnapshots.docs.length - 1];
       onSnapshot(colRef, (snapshot) => {
         setTotal(snapshot.size);
       });
@@ -105,11 +104,11 @@ const PostManage = () => {
   const renderPostStatus = (status) => {
     switch (status) {
       case postStatus.APPROVED:
-        return <LabelStatus type="success">Approved</LabelStatus>;
+        return <LabelStatus type='success'>Approved</LabelStatus>;
       case postStatus.PENDING:
-        return <LabelStatus type="warning">Pending</LabelStatus>;
+        return <LabelStatus type='warning'>Pending</LabelStatus>;
       case postStatus.REJECTED:
-        return <LabelStatus type="danger">Rejected</LabelStatus>;
+        return <LabelStatus type='danger'>Rejected</LabelStatus>;
 
       default:
         break;
@@ -119,11 +118,7 @@ const PostManage = () => {
     setFilter(e.target.value);
   }, 500);
   const handleLoadMorePost = async () => {
-    const nextRef = query(
-      collection(db, "posts"),
-      startAfter(lastDoc || 0),
-      limit(POST_PER_PAGE)
-    );
+    const nextRef = query(collection(db, "posts"), startAfter(lastDoc || 0), limit(POST_PER_PAGE));
 
     onSnapshot(nextRef, (snapshot) => {
       let results = [];
@@ -136,24 +131,20 @@ const PostManage = () => {
       setPostList([...postList, ...results]);
     });
     const documentSnapshots = await getDocs(nextRef);
-    const lastVisible =
-      documentSnapshots.docs[documentSnapshots.docs.length - 1];
+    const lastVisible = documentSnapshots.docs[documentSnapshots.docs.length - 1];
     setLastDoc(lastVisible);
   };
 
   if (roleUser !== userRole.ADMIN) return <PostManageUser></PostManageUser>;
   return (
     <div>
-      <DashboardHeading
-        title="All posts"
-        desc="Manage all posts"
-      ></DashboardHeading>
-      <div className="flex justify-end">
-        <div className="w-full max-w-[300px] ">
+      <DashboardHeading title='All posts' desc='Manage all posts'></DashboardHeading>
+      <div className='flex justify-end'>
+        <div className='w-full max-w-[300px] '>
           <input
-            type="text"
-            className="w-full p-4 border border-gray-300 border-solid rounded-lg"
-            placeholder="Search post..."
+            type='text'
+            className='w-full p-4 border border-gray-300 border-solid rounded-lg'
+            placeholder='Search post...'
             onChange={handleSearchPost}
           />
         </div>
@@ -179,48 +170,34 @@ const PostManage = () => {
 
               return (
                 <tr key={post.id}>
-                  <td className="text-center ">
-                    {post.id?.slice(0, 5) + "..."}
-                  </td>
-                  <td className="!pr-[20px]">
-                    <div className="flex items-center gap-x-3">
+                  <td className='text-center '>{post.id?.slice(0, 5) + "..."}</td>
+                  <td className='!pr-[20px]'>
+                    <div className='flex items-center gap-x-3 mgr-50-mb'>
                       <img
                         src={post.image}
                         alt={post.title}
-                        className="w-[66px] h-[55px] rounded object-cover"
+                        className='w-[66px] h-[55px] rounded object-cover'
                       />
-                      <div className="flex-1">
-                        <h3 className="font-semibold max-w-[100px] hide-text-dot">
-                          {post.title}
-                        </h3>
-                        <time className="text-sm text-gray-500">
-                          Date: {formatDate}
-                        </time>
+                      <div className='flex-1'>
+                        <h3 className='font-semibold max-w-[100px] hide-text-dot'>{post.title}</h3>
+                        <time className='text-sm text-gray-500'>Date: {formatDate}</time>
                       </div>
                     </div>
                   </td>
                   <td>
-                    <span className="text-gray-500 ">
-                      {post.category?.name}
-                    </span>
+                    <span className='text-gray-500 '>{post.category?.name}</span>
                   </td>
                   <td>
-                    <span className="text-gray-500">{post.user?.username}</span>
+                    <span className='text-gray-500'>{post.user?.username}</span>
                   </td>
                   <td>{renderPostStatus(post.status)}</td>
                   <td>
-                    <div className="flex items-center text-gray-500 gap-x-3">
-                      <ActionView
-                        onClick={() => navigate(`/${post.slug}`)}
-                      ></ActionView>
+                    <div className='flex items-center text-gray-500 gap-x-3'>
+                      <ActionView onClick={() => navigate(`/${post.slug}`)}></ActionView>
                       <ActionEdit
-                        onClick={() =>
-                          navigate(`/manage/update-post?id=${post.id}`)
-                        }
+                        onClick={() => navigate(`/manage/update-post?id=${post.id}`)}
                       ></ActionEdit>
-                      <ActionDelete
-                        onClick={() => handleDeletePost(post.id)}
-                      ></ActionDelete>
+                      <ActionDelete onClick={() => handleDeletePost(post.id)}></ActionDelete>
                     </div>
                   </td>
                 </tr>
@@ -229,12 +206,8 @@ const PostManage = () => {
         </tbody>
       </Table>
       {total > postList.length && (
-        <div className="mt-10 text-center">
-          <Button
-            type="button"
-            className="mx-auto w-[200px]"
-            onClick={handleLoadMorePost}
-          >
+        <div className='mt-10 text-center'>
+          <Button type='button' className='mx-auto w-[200px]' onClick={handleLoadMorePost}>
             Load more
           </Button>
         </div>

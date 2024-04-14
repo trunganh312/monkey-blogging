@@ -5,24 +5,6 @@ import { signOut } from "firebase/auth";
 import { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import styled from "styled-components";
-const menuLink = [
-  {
-    url: "/",
-    title: "Home",
-  },
-  {
-    url: "/blog",
-    title: "Blog",
-  },
-  {
-    url: "/contact",
-    title: "Contact",
-  },
-  {
-    url: "/dashboard",
-    title: "Dashboard",
-  },
-];
 
 const HeaderStyle = styled.header`
   display: flex;
@@ -144,10 +126,34 @@ const HeaderStyle = styled.header`
 `;
 
 const Header = () => {
-  const navigate = useNavigate();
   const { userInfo } = useAuth();
-  const [show, setShow] = useState(false);
   const isLogin = !!userInfo?.email;
+  const menuLink = [
+    {
+      show: true,
+      url: "/",
+      title: "Home",
+    },
+    {
+      show: true,
+      url: "/blog",
+      title: "Blog",
+    },
+    {
+      show: true,
+      url: "/contact",
+      title: "Contact",
+    },
+    {
+      show: isLogin ? true : false,
+      url: "/dashboard",
+      title: "Dashboard",
+    },
+  ];
+  const navigate = useNavigate();
+
+  const [show, setShow] = useState(false);
+
   const handleSignOut = () => {
     signOut(auth);
   };
@@ -156,8 +162,9 @@ const Header = () => {
       <div className={`sidebar duration-200 ${show ? " translate-x-0" : " translate-x-[200%]"}`}>
         <div className='leading-10'>
           {menuLink.map((menu) => {
+            console.log(menu.show);
             return (
-              <li key={menu.title} className='menu-item'>
+              <li key={menu.title} className={`${menu?.show ? "block" : "hidden"} menu-item`}>
                 <NavLink to={menu.url} className='menu-link'>
                   {menu.title}
                 </NavLink>
@@ -196,7 +203,7 @@ const Header = () => {
         <ul className='menu '>
           {menuLink.map((menu) => {
             return (
-              <li key={menu.title} className='menu-item'>
+              <li key={menu.title} className={`${menu?.show ? "" : "hidden"} menu-item`}>
                 <NavLink to={menu.url} className='menu-link'>
                   {menu.title}
                 </NavLink>
@@ -206,14 +213,14 @@ const Header = () => {
           <button
             data-collapse-toggle='navbar-default'
             type='button'
-            class='inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400'
+            className='inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400'
             aria-controls='navbar-default'
             aria-expanded='false'
             onClick={() => setShow(!show)}
           >
-            <span class='sr-only'>Open main menu</span>
+            <span className='sr-only'>Open main menu</span>
             <svg
-              class='w-5 h-5'
+              className='w-5 h-5'
               aria-hidden='true'
               xmlns='http://www.w3.org/2000/svg'
               fill='none'

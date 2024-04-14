@@ -46,13 +46,13 @@ const HomeBanner = () => {
           <div className='content'>
             <h1 className='title'>Monkey Blogging</h1>
             <p className='description'>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-              incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
-              exercitation ullamco laboris nisi.
+              Monkey blogging là một trang web hoặc nền tảng trực tuyến nơi người dùng có thể đọc và
+              cập nhật thông tin mới nhất về các sự kiện, tin tức, xu hướng và các chủ đề quan trọng
+              khác. Với sự phát triển của công nghệ và internet, blog tin tức đã trở thành một nguồn
+              thông tin quan trọng và phổ biến, cung cấp cho người đọc những thông tin chính xác,
+              đáng tin cậy và đa dạng trong nhiều lĩnh vực như chính trị, kinh tế, văn hóa, giải
+              trí, thể thao và nhiều lĩnh vực khác
             </p>
-            <Button type='button' className='btn'>
-              Get Started
-            </Button>
           </div>
           <div className='logo'>
             <IconBanner></IconBanner>

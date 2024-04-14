@@ -3,6 +3,7 @@ import styled from "styled-components";
 
 const AuthorBoxStyle = styled.div`
   display: flex;
+  display: none;
   margin: 50px 0;
   border-radius: 10px;
   overflow: hidden;

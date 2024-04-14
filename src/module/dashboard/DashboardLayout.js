@@ -48,15 +48,15 @@ const DashboardLayout = () => {
           <button
             data-collapse-toggle='navbar-default'
             type='button'
-            class='inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 '
+            className='inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 '
             aria-controls='navbar-default'
             aria-expanded='false'
             onClick={() => setShow(!show)}
             ref={nodeRef}
           >
-            <span class='sr-only'>Open main menu</span>
+            <span className='sr-only'>Open main menu</span>
             <svg
-              class='w-5 h-5'
+              className='w-5 h-5'
               aria-hidden='true'
               xmlns='http://www.w3.org/2000/svg'
               fill='none'
@@ -73,7 +73,9 @@ const DashboardLayout = () => {
           </button>
         </div>
         <div
-          className={`sidebar duration-200 ${show ? " translate-x-0" : " translate-x-[-100%]"}`}
+          className={`sidebar duration-200 position-z-99 ${
+            show ? " translate-x-0" : " translate-x-[-100%]"
+          }`}
           onClick={() => setShow(false)}
         >
           <SidebarMB></SidebarMB>

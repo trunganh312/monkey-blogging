@@ -12,11 +12,9 @@ const PostImageStyles = styled.div`
 const PostImage = ({ className = "", url = "", alt = "", to = "" }) => {
   if (to)
     return (
-      <Link to={`/${to}`} style={{ display: "block" }}>
-        <PostImageStyles className={`post-image ${className}`}>
-          <img src={url} alt={alt} loading='lazy' />
-        </PostImageStyles>
-      </Link>
+      <PostImageStyles className={`post-image ${className}`}>
+        <img src={url} alt={alt} loading='lazy' />
+      </PostImageStyles>
     );
   return (
     <PostImageStyles className={`post-image ${className}`}>

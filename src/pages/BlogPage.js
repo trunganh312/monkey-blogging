@@ -1,15 +1,7 @@
 import { Input } from "components/input";
 import Layout from "components/layout/Layout";
 import { db } from "firebase-app/firebase-config";
-import {
-  collection,
-  doc,
-  getDocs,
-  limit,
-  onSnapshot,
-  query,
-  where,
-} from "firebase/firestore";
+import { collection, doc, getDocs, limit, onSnapshot, query, where } from "firebase/firestore";
 import _, { debounce } from "lodash";
 import PostItem from "module/post/PostItem";
 import React, { useEffect, useState } from "react";
@@ -22,6 +14,7 @@ const BlogPageStyles = styled.div`
   max-width: 1180px;
   margin: 0 auto;
   padding: 40px;
+  overflow: hidden;
 `;
 const POST_PER_PAGE = 10;
 const BlogPage = () => {
@@ -44,9 +37,7 @@ const BlogPage = () => {
     (async () => {
       try {
         const colRef = collection(db, "posts");
-        const newRef = value
-          ? query(colRef, where("category.name", "==", value))
-          : query(colRef);
+        const newRef = value ? query(colRef, where("category.name", "==", value)) : query(colRef);
         onSnapshot(newRef, (snapshot) => {
           const postList = snapshot.docs.map((doc) => {
             return {
@@ -76,19 +67,19 @@ const BlogPage = () => {
   return (
     <BlogPageStyles>
       <Layout>
-        <div className="flex items-center justify-between mt-10">
-          <h1 className="text-2xl ">Danh sách các bài viết:</h1>
+        <div className='flex items-center justify-between mt-10'>
+          <h1 className='text-2xl '>Danh sách các bài viết:</h1>
         </div>
-        <div className="flex items-center gap-10 mt-10">
-          <h1 className="text-2xl ">Lọc bài viết:</h1>
+        <div className='flex items-center gap-10 mt-10 '>
+          <h1 className='text-2xl font-mb '>Lọc bài viết:</h1>
           <select
-            id="category"
-            className="w-[200px] p-3 rounded-lg border cursor-pointer text-sm"
+            id='category'
+            className='w-[200px] p-3 rounded-lg border cursor-pointer text-sm'
             onChange={(e) => {
               setValue(e.target.value);
             }}
           >
-            <option value="">Select category...&hellip;</option>
+            <option value=''>Select category...&hellip;</option>
             {category?.map((item) => {
               return (
                 <option value={item} key={item}>
@@ -98,7 +89,7 @@ const BlogPage = () => {
             })}
           </select>
         </div>
-        <div className="!grid-cols-3 form-layout !mt-10">
+        <div className='!grid-cols-3 form-layout !mt-10  '>
           {currentItems &&
             currentItems.length > 0 &&
             currentItems.map((post) => {
@@ -106,14 +97,14 @@ const BlogPage = () => {
             })}
         </div>
         <ReactPaginate
-          breakLabel="..."
-          nextLabel=" >"
+          breakLabel='...'
+          nextLabel=' >'
           onPageChange={handlePageClick}
           pageRangeDisplayed={3}
           pageCount={pageCount}
-          previousLabel="< "
+          previousLabel='< '
           renderOnZeroPageCount={null}
-          className="pagination"
+          className='pagination'
         />
       </Layout>
     </BlogPageStyles>

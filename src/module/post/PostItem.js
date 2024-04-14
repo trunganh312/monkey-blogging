@@ -26,26 +26,24 @@ const PostItemStyle = styled.div`
 
 const PostItem = ({ post = {} }) => {
   if (!post) return;
-  const date = post?.createdAt?.seconds
-    ? new Date(post?.createdAt?.seconds * 1000)
-    : new Date();
+  const date = post?.createdAt?.seconds ? new Date(post?.createdAt?.seconds * 1000) : new Date();
   const formatDate = new Date(date).toLocaleDateString("vi-VI");
   return (
-    <Link to={`/${post.slug}`}>
-      <PostItemStyle>
-        <PostImage className="img" url={post.image} to={post.slug}></PostImage>
-        <PostCategory to={post.category?.slug}>
-          {post.category?.name}
-        </PostCategory>
-        <PostTitle className="title">{post.title}</PostTitle>
+    <PostItemStyle>
+      <Link to={`/${post.slug}`}>
+        <PostImage className='img' url={post.image} to={post.slug}></PostImage>
+        <PostCategory to={post.category?.slug}>{post.category?.name}</PostCategory>
+        <PostTitle className='title' to={`/${post.slug}`}>
+          {post.title}
+        </PostTitle>
         <PostMeta
-          className="meta"
+          className='meta'
           date={formatDate}
           name={post?.user?.fullname}
           to={post?.user?.username}
         ></PostMeta>
-      </PostItemStyle>
-    </Link>
+      </Link>
+    </PostItemStyle>
   );
 };
 

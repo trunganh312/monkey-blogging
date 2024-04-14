@@ -31,6 +31,30 @@ body {
 
 .form-layout {
   @apply grid grid-cols-1 lg:grid-cols-2 lg:gap-x-10 mb-5 lg:mb-10;
+  @media only screen and (max-width: 739px) {
+    grid-template-columns: 1fr !important;
+    gap: 20px !important;
+  }
+}
+
+.font-mb {
+  @media only screen and (max-width: 739px) {
+    font-size: 15px;
+  }
+}
+
+.mgr-50-mb {
+  @media only screen and (max-width: 739px) {
+    margin-right: 50px !important;
+  }
+}
+
+.position-z-99 {
+  @media only screen and (max-width: 739px) {
+    position: relative !important;
+    z-index: 99 !important;
+    top: 5px;
+  }
 }
 
 .container {
