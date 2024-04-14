@@ -162,7 +162,6 @@ const Header = () => {
       <div className={`sidebar duration-200 ${show ? " translate-x-0" : " translate-x-[200%]"}`}>
         <div className='leading-10'>
           {menuLink.map((menu) => {
-            console.log(menu.show);
             return (
               <li key={menu.title} className={`${menu?.show ? "block" : "hidden"} menu-item`}>
                 <NavLink to={menu.url} className='menu-link'>

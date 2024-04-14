@@ -22,21 +22,12 @@ const UserManage = () => {
     })();
   }, [userInfo?.uid]);
 
-  if (roleUser !== userRole.ADMIN) return null;
+  if (roleUser !== userRole.ADMIN && roleUser !== userRole.MOD) return null;
   return (
     <div>
-      <DashboardHeading
-        title="Users"
-        desc="Manage your user"
-      ></DashboardHeading>
-      <div className="flex justify-end mb-10">
-        <Button
-          type="button"
-          maxWidth="200px"
-          padding="20px"
-          fontSize="16px"
-          to="/manage/add-user"
-        >
+      <DashboardHeading title='Users' desc='Manage your user'></DashboardHeading>
+      <div className='flex justify-end mb-10'>
+        <Button type='button' maxWidth='200px' padding='20px' fontSize='16px' to='/manage/add-user'>
           Add new user
         </Button>
       </div>

@@ -33,6 +33,7 @@ Quill.register("modules/imageUploader", ImageUploader);
 
 const PostAddNew = () => {
   const { userInfo } = useAuth();
+
   const { control, watch, setValue, handleSubmit, getValues, reset } = useForm({
     mode: "onChange",
     defaultValues: {
@@ -49,29 +50,23 @@ const PostAddNew = () => {
   const [content, setContent] = useState("");
   const watchStatus = watch("status");
   const watchHot = watch("hot");
-  const {
-    image,
-    handleResetUpload,
-    progress,
-    handleSelectImage,
-    handleDeleteImage,
-  } = useFirebaseImage(setValue, getValues);
+  const { image, handleResetUpload, progress, handleSelectImage, handleDeleteImage } =
+    useFirebaseImage(setValue, getValues);
   const [categories, setCategories] = useState([]);
   const [selectCategory, setSelectCategory] = useState("");
   const [loading, setLoading] = useState(false);
+  const [userRole, setUserRole] = useState();
   useEffect(() => {
     async function fetchUserData() {
       if (!userInfo.email) return;
-      const q = query(
-        collection(db, "users"),
-        where("email", "==", userInfo.email)
-      );
+      const q = query(collection(db, "users"), where("email", "==", userInfo.email));
       const querySnapshot = await getDocs(q);
       querySnapshot.forEach((doc) => {
         setValue("user", {
           id: doc.id,
           ...doc.data(),
         });
+        setUserRole(doc.data().role);
       });
     }
     fetchUserData();
@@ -137,6 +132,8 @@ const PostAddNew = () => {
     document.title = "Monkey Blogging - Add new post";
   }, []);
 
+  const user = getValues("user");
+
   const handleSelectCategory = async (item) => {
     const colRef = doc(db, "categories", item.id);
     const docData = await getDoc(colRef);
@@ -180,7 +177,7 @@ const PostAddNew = () => {
         },
       },
     }),
-    []
+    [],
   );
 
   const formats = [
@@ -200,34 +197,25 @@ const PostAddNew = () => {
 
   return (
     <>
-      <DashboardHeading title="Add post" desc="Add new post"></DashboardHeading>
+      <DashboardHeading title='Add post' desc='Add new post'></DashboardHeading>
       <form onSubmit={handleSubmit(addPostHandler)}>
-        <div className="form-layout">
+        <div className='form-layout'>
           <Field>
             <Label>Title</Label>
-            <Input
-              control={control}
-              placeholder="Enter your title"
-              name="title"
-              required
-            ></Input>
+            <Input control={control} placeholder='Enter your title' name='title' required></Input>
           </Field>
           <Field>
             <Label>Slug</Label>
-            <Input
-              control={control}
-              placeholder="Enter your slug"
-              name="slug"
-            ></Input>
+            <Input control={control} placeholder='Enter your slug' name='slug'></Input>
           </Field>
         </div>
-        <div className="form-layout">
+        <div className='form-layout'>
           <Field>
             <Label>Image</Label>
             <ImageUpload
               onChange={handleSelectImage}
               handleDeleteImage={handleDeleteImage}
-              className="h-[250px]"
+              className='h-[250px]'
               progress={progress}
               image={image}
             ></ImageUpload>
@@ -236,33 +224,30 @@ const PostAddNew = () => {
             <Label>Category</Label>
             <Dropdown
               placeholderDropdown={"Please select an option "}
-              placeholderSearch="Search your option..."
+              placeholderSearch='Search your option...'
             >
-              <div className="flex flex-col p-3 border rounded-lg options border-slate-200">
+              <div className='flex flex-col p-3 border rounded-lg options border-slate-200'>
                 {categories.map((category) => (
-                  <Dropdown.Option
-                    key={category.id}
-                    onClick={() => handleSelectCategory(category)}
-                  >
+                  <Dropdown.Option key={category.id} onClick={() => handleSelectCategory(category)}>
                     <span>{category.name}</span>
                   </Dropdown.Option>
                 ))}
               </div>
             </Dropdown>
             {selectCategory?.name && (
-              <span className="inline-block p-3 text-sm font-medium text-green-600 rounded-lg bg-green-50">
+              <span className='inline-block p-3 text-sm font-medium text-green-600 rounded-lg bg-green-50'>
                 {selectCategory?.name}
               </span>
             )}
           </Field>
         </div>
-        <div className="mb-10">
+        <div className='mb-10'>
           <Field>
             <Label>Content</Label>
-            <div className="w-full entry-content">
+            <div className='w-full entry-content'>
               <ReactQuill
                 formats={formats}
-                theme="snow"
+                theme='snow'
                 value={content}
                 onChange={setContent}
                 modules={modules}
@@ -270,19 +255,20 @@ const PostAddNew = () => {
             </div>
           </Field>
         </div>
-        <div className="form-layout">
+        <div className='form-layout'>
           <Field>
             <Label>Feature post</Label>
-            <Toggle
-              on={watchHot === true}
-              onClick={() => setValue("hot", !watchHot)}
-            ></Toggle>
+            <Toggle on={watchHot === true} onClick={() => setValue("hot", !watchHot)}></Toggle>
           </Field>
-          <Field>
+          <Field
+            styles={{
+              display: `${userRole === 3 ? "none" : ""}`,
+            }}
+          >
             <Label>Status</Label>
-            <div className="flex gap-5">
+            <div className='flex gap-5'>
               <Radio
-                name="status"
+                name='status'
                 control={control}
                 checked={Number(watchStatus) === postStatus.APPROVED}
                 value={postStatus.APPROVED}
@@ -290,7 +276,7 @@ const PostAddNew = () => {
                 Approved
               </Radio>
               <Radio
-                name="status"
+                name='status'
                 control={control}
                 checked={Number(watchStatus) === postStatus.PENDING}
                 value={postStatus.PENDING}
@@ -298,7 +284,7 @@ const PostAddNew = () => {
                 Pending
               </Radio>
               <Radio
-                name="status"
+                name='status'
                 control={control}
                 checked={Number(watchStatus) === postStatus.REJECTED}
                 value={postStatus.REJECTED}
@@ -308,12 +294,7 @@ const PostAddNew = () => {
             </div>
           </Field>
         </div>
-        <Button
-          type="submit"
-          className="mx-auto w-[250px]"
-          isLoading={loading}
-          disabled={loading}
-        >
+        <Button type='submit' className='mx-auto w-[250px]' isLoading={loading} disabled={loading}>
           Add new post
         </Button>
       </form>

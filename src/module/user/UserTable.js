@@ -1,8 +1,9 @@
 import { ActionDelete, ActionEdit } from "components/action";
 import { LabelStatus } from "components/label";
 import { Table } from "components/table";
+import { useAuth } from "contexts/auth-context";
 import { db } from "firebase-app/firebase-config";
-import { collection, deleteDoc, doc, onSnapshot } from "firebase/firestore";
+import { collection, deleteDoc, doc, getDoc, onSnapshot } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import ReactPaginate from "react-paginate";
 import { useNavigate } from "react-router-dom";
@@ -10,6 +11,7 @@ import Swal from "sweetalert2";
 import { userRole, userStatus } from "utils/constants";
 const USER_PER_PAGE = 5;
 const UserTable = () => {
+  const [roleUser, setRoleUser] = useState(0);
   const navigate = useNavigate();
   const [userList, setUserList] = useState([]);
   useEffect(() => {
@@ -81,6 +83,20 @@ const UserTable = () => {
 
     setItemOffset(newOffset);
   };
+  const { userInfo } = useAuth();
+  useEffect(() => {
+    (async () => {
+      try {
+        const colRef = doc(db, "users", userInfo?.uid);
+        const docData = await getDoc(colRef);
+        setRoleUser(docData.data().role);
+      } catch (error) {
+        console.log(error.message);
+      }
+    })();
+  }, [userInfo?.uid]);
+
+  if (roleUser !== userRole.ADMIN && roleUser !== userRole.MOD) return null;
 
   const renderUserItem = (user) => {
     return (
@@ -108,7 +124,10 @@ const UserTable = () => {
         <td>
           <div className='flex items-center text-gray-500 gap-x-3'>
             <ActionEdit onClick={() => navigate(`/manage/update-user?id=${user.id}`)}></ActionEdit>
-            <ActionDelete onClick={() => handleDeleteUser(user.id)}></ActionDelete>
+            <ActionDelete
+              disiable={roleUser.role === userRole.MOD}
+              onClick={() => handleDeleteUser(user.id)}
+            ></ActionDelete>
           </div>
         </td>
       </tr>

@@ -197,7 +197,10 @@ const PostManage = () => {
                       <ActionEdit
                         onClick={() => navigate(`/manage/update-post?id=${post.id}`)}
                       ></ActionEdit>
-                      <ActionDelete onClick={() => handleDeletePost(post.id)}></ActionDelete>
+                      <ActionDelete
+                        disiable={roleUser === userRole.MOD}
+                        onClick={() => handleDeletePost(post.id)}
+                      ></ActionDelete>
                     </div>
                   </td>
                 </tr>

@@ -34,7 +34,7 @@ const CategoryManage = () => {
     const nextRef = query(
       collection(db, "categories"),
       startAfter(lastDoc || 0),
-      limit(CATEGORY_PER_PAGE)
+      limit(CATEGORY_PER_PAGE),
     );
     onSnapshot(nextRef, (snapshot) => {
       let results = [];
@@ -47,8 +47,7 @@ const CategoryManage = () => {
       setCategoryList([...categoryList, ...results]);
     });
     const documentSnapshots = await getDocs(nextRef);
-    const lastVisible =
-      documentSnapshots.docs[documentSnapshots.docs.length - 1];
+    const lastVisible = documentSnapshots.docs[documentSnapshots.docs.length - 1];
     setLastDoc(lastVisible);
   };
 
@@ -56,15 +55,10 @@ const CategoryManage = () => {
     async function fetchData() {
       const colRef = collection(db, "categories");
       const newRef = value
-        ? query(
-            colRef,
-            where("name", ">=", value),
-            where("name", "<=", value + "utf8")
-          )
+        ? query(colRef, where("name", ">=", value), where("name", "<=", value + "utf8"))
         : query(colRef, limit(CATEGORY_PER_PAGE));
       const documentSnapshots = await getDocs(newRef);
-      const lastVisible =
-        documentSnapshots.docs[documentSnapshots.docs.length - 1];
+      const lastVisible = documentSnapshots.docs[documentSnapshots.docs.length - 1];
 
       onSnapshot(colRef, (snapshot) => {
         setTotal(snapshot.size);
@@ -116,25 +110,25 @@ const CategoryManage = () => {
     })();
   }, [userInfo?.uid]);
 
-  if (roleUser !== userRole.ADMIN) return null;
+  if (roleUser !== userRole.ADMIN && roleUser !== userRole.MOD) return null;
   return (
     <div>
-      <DashboardHeading title="Categories" desc="Manage your category">
+      <DashboardHeading title='Categories' desc='Manage your category'>
         <Button
-          maxWidth="300px"
-          fontSize="16px"
-          padding="20px 20px"
-          to="/manage/add-category"
-          type="button"
+          maxWidth='300px'
+          fontSize='16px'
+          padding='20px 20px'
+          to='/manage/add-category'
+          type='button'
         >
           Create category
         </Button>
       </DashboardHeading>
-      <div className="flex justify-end">
+      <div className='flex justify-end'>
         <input
-          type="text"
-          className="p-4 border border-gray-200 rounded-lg w-full max-w-[300px]"
-          placeholder="Search category..."
+          type='text'
+          className='p-4 border border-gray-200 rounded-lg w-full max-w-[300px]'
+          placeholder='Search category...'
           onChange={(e) => setFilter(e.target.value)}
         />
       </div>
@@ -157,28 +151,25 @@ const CategoryManage = () => {
                   <td>{category.id}</td>
                   <td>{category.name}</td>
                   <td>
-                    <span className="italic text-gray-400">
-                      {category.slug}
-                    </span>
+                    <span className='italic text-gray-400'>{category.slug}</span>
                   </td>
                   <td>
                     {Number(category.status) === categoryStatus.APPROVED ? (
-                      <LabelStatus type="success">Approved</LabelStatus>
+                      <LabelStatus type='success'>Approved</LabelStatus>
                     ) : (
-                      <LabelStatus type="warning">Unapproved</LabelStatus>
+                      <LabelStatus type='warning'>Unapproved</LabelStatus>
                     )}
                   </td>
                   <td>
-                    <div className="flex items-center text-gray-500 gap-x-3">
+                    <div className='flex items-center text-gray-500 gap-x-3'>
                       <ActionView
                         onClick={() => navigate(`/category/${category.slug}`)}
                       ></ActionView>
                       <ActionEdit
-                        onClick={() =>
-                          navigate(`/manage/update-category?id=${category.id}`)
-                        }
+                        onClick={() => navigate(`/manage/update-category?id=${category.id}`)}
                       ></ActionEdit>
                       <ActionDelete
+                        disiable={roleUser === userRole.MOD}
                         onClick={() => handleDeleteCategory(category.id)}
                       ></ActionDelete>
                     </div>
@@ -189,13 +180,13 @@ const CategoryManage = () => {
         </tbody>
       </Table>
       {total > categoryList.length && (
-        <div className="flex justify-center mt-5">
+        <div className='flex justify-center mt-5'>
           <Button
-            type="button"
+            type='button'
             onClick={handleLoadMoreCategory}
-            maxWidth="200px"
-            padding="20px"
-            fontSize="16px"
+            maxWidth='200px'
+            padding='20px'
+            fontSize='16px'
           >
             Load more
           </Button>

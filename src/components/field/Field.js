@@ -10,8 +10,12 @@ const FieldStyles = styled.div`
   margin-bottom: 30px;
 `;
 
-const Field = ({ children, className }) => {
-  return <FieldStyles className={className}>{children}</FieldStyles>;
+const Field = ({ children, className, styles }) => {
+  return (
+    <FieldStyles style={styles} className={className}>
+      {children}
+    </FieldStyles>
+  );
 };
 
 Field.propTypes = {
