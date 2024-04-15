@@ -28,7 +28,7 @@ const HomeFeature = () => {
   const [data, setData] = useState([]);
   useEffect(() => {
     const colRef = collection(db, "posts");
-    const q = query(colRef, where("status", "==", 1), orderBy("createdAt"), limit(12));
+    const q = query(colRef, where("status", "==", 1), limit(12));
     onSnapshot(q, (snapshot) => {
       const posts = snapshot.docs.map((doc) => {
         return {
